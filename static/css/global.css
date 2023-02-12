@@ -1,0 +1,159 @@
+.vertical-scroll{
+  overflow: hidden;
+}
+ 
+.vertical-scroll:hover{
+  overflow-y: auto;
+}
+  
+/* width */
+.vertical-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+  
+/* Track */
+.vertical-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+   
+/* Handle */
+.vertical-scroll::-webkit-scrollbar-thumb {
+  background: #d85858; 
+}
+  
+/* Handle on hover */
+.vertical-scroll::-webkit-scrollbar-thumb:hover {
+  background: #B01E1E; 
+}
+  
+.horizontal-scroll{
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+  
+.horizontal-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 5px;
+}
+  
+/* Track */
+.horizontal-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+   
+/* Handle */
+.horizontal-scroll::-webkit-scrollbar-thumb {
+  background: #d85858; 
+}
+  
+/* Handle on hover */
+.horizontal-scroll::-webkit-scrollbar-thumb:hover {
+  background: #B01E1E;
+}
+  
+.horizontal-scroll:hover{
+  overflow-x: auto;
+}
+  
+.row > div{
+  margin: 0 !important;
+}
+  
+.form-red{
+  color: #B01E1E;
+  font-family: 'Asap Condensed';
+}
+  
+.form-red::placeholder {
+  color: #d85858;
+  font-family: 'Asap Condensed';
+  opacity: 1; /* Firefox */
+}
+  
+.form-red:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #d85858;
+  font-family: 'Asap Condensed';
+}
+  
+.form-red::-ms-input-placeholder { /* Microsoft Edge */
+  color: #d85858;
+  font-family: 'Asap Condensed';
+}
+  
+.btn-red:disabled{
+  background-color:#B01E1E;
+  border: #B01E1E solid 1px;
+  color: #fff;
+  font-family: 'Francois One';
+  border-radius: 99px;
+  padding-left: 10px;
+  padding-right: 10px;
+  opacity: 1;
+}
+  
+.btn-red{
+  color: #B01E1E;
+  font-family: 'Francois One';
+  border-radius: 99px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+  
+.btn-red:hover{
+  background-color:#B01E1E;
+  border: #B01E1E solid 1px;
+  color: #fff;
+}
+  
+.form-search:focus{
+  border: #B01E1E solid 10px;
+}
+  
+.form-search > .btn{
+  background-color: white;
+  border: none;
+  border-radius: 99px;
+  font-family: 'Francois One';
+  padding-right: 15px;
+}
+  
+.form-search > .btn:hover{
+  background-color: white;
+  color: #d85858;
+}
+ 
+.form-search > .btn:focus{
+  box-shadow: none;
+  color: #d85858;
+}
+  
+.form-search > .form-control{
+  background-color: white;
+  border: none;
+  border-radius: 99px;
+  padding-left: 15px;
+}
+  
+.form-search > .form-control:focus{
+  box-shadow: none;
+}
+  
+@media (max-width: 768px){
+    .vertical-scroll{
+      overflow-y:hidden;
+    }
+  
+    .horizontal-scroll{
+      overflow-x: auto;
+    }
+  
+    .horizontal-scroll::-webkit-scrollbar {
+      display: none;
+    }
+  
+    .vertical-scroll::-webkit-scrollbar {
+      display: none;
+    }
+}
