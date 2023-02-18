@@ -2,5 +2,6 @@
     background: linear-gradient(0deg, #1db954aa, #09431da9), url(https://i.pinimg.com/750x/7c/ab/a9/7caba9836faa916aba720a53c6396826.jpg);
     width: 100%;
     height: 100vh;
-    background-image: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
