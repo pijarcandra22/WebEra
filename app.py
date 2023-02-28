@@ -32,7 +32,7 @@ def upload_audio(directory,name_file):
     newfilename=str(uuid.uuid4().hex)+'.'+formatfile[1]
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     os.rename(os.path.join(app.config['UPLOAD_FOLDER'], filename),os.path.join(app.config['UPLOAD_FOLDER'], newfilename))
-    return newfilename
+    return newfilename #,formatfile[0]
 
 @app.route('/')
 def index():
@@ -40,7 +40,11 @@ def index():
 
 @app.route('/process', methods=['POST'])
 def process():
-  audio=upload_audio("data","audio")
+  # jumlah = request.form['num']
+
+  # for i in range(int(jumlah)):
+  #   audio=upload_audio("data","audio"+str(i))
+  audio=upload_audio("data","audio0")
   if not audio:
     return "None"
   
