@@ -6,8 +6,10 @@ from scipy.io import wavfile
 import librosa
 import librosa.display
 import numpy as np
+import pandas as pd
 import uuid
 import os
+import json
 
 app = Flask(__name__)
 app = Flask(__name__,template_folder='temp')
@@ -32,7 +34,7 @@ def upload_audio(directory,name_file):
     newfilename=str(uuid.uuid4().hex)+'.'+formatfile[1]
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     os.rename(os.path.join(app.config['UPLOAD_FOLDER'], filename),os.path.join(app.config['UPLOAD_FOLDER'], newfilename))
-    return newfilename #,formatfile[0]
+    return newfilename ,formatfile[0]
 
 @app.route('/')
 def index():
@@ -40,23 +42,66 @@ def index():
 
 @app.route('/process', methods=['POST'])
 def process():
-  # jumlah = request.form['num']
+  jumlah = request.form['num']
 
-  # for i in range(int(jumlah)):
-  #   audio=upload_audio("data","audio"+str(i))
-  audio=upload_audio("data","audio0")
-  if not audio:
-    return "None"
+  audioDataOut = {}
+  no = 0
+
+  for i in range(int(jumlah)):
+    audio,real=upload_audio("static/data","audio"+str(i))
+
+    if not audio:
+      continue
+    print(audio)
+
+    feature = get_features("static/data/"+audio)
+    X = []
+    for ele in feature:
+      X.append(ele)
+    
+    X = np.array(X)
+    predict = model.predict(X)
+    mapAudio = np.array([model['knn'].kneighbors(model['scaler'].transform([x]))[1].tolist()[0] for x in X]).flatten()
+    mapScore = np.array([model['knn'].kneighbors(model['scaler'].transform([x]))[0].tolist()[0] for x in X]).flatten()
   
-  feature = get_features("data/"+audio)
-  X = []
-  for ele in feature:
-    X.append(ele)
+    min_indices = np.argpartition(mapScore,3-1)[:3]
+    min_values  = mapAudio[min_indices].tolist()
+
+    audioData = pd.read_csv('newfeatures.csv')
+    path = audioData.iloc[min_values,:]['path'].values.tolist()
+
+    audioDataOut[no] = {
+      "realTitle":real,
+      "music_input":audio,
+      "music_near":path,
+      "pred":predict.mean()
+    }
+    no+=1
+
+  # audio=upload_audio("data","audio0")
+  # if not audio:
+  #   return "None"
   
-  X = np.array(X)
-  predict = model.predict(X)
-  print(predict)
-  return str(predict.mean())
+  # feature = get_features("data/"+audio)
+  # X = []
+  # for ele in feature:
+  #   X.append(ele)
+  
+  # X = np.array(X)
+  # predict = model.predict(X)
+  # mapAudio = np.array([model['knn'].kneighbors(model['scaler'].transform([x]))[1].tolist()[0] for x in X]).flatten()
+  # mapScore = np.array([model['knn'].kneighbors(model['scaler'].transform([x]))[0].tolist()[0] for x in X]).flatten()
+ 
+  # min_indices = np.argpartition(mapScore,3-1)[:3]
+  # min_values  = mapAudio[min_indices].tolist()
+
+  # audioData = pd.read_csv('newfeatures.csv')
+  # path = audioData.iloc[min_values,:]['path'].values
+  # print(path)
+  # print(predict)
+
+
+  return str(json.dumps(audioDataOut))
 
 def noise(data):
     noise_amp = 0.035*np.random.uniform()*np.amax(data)

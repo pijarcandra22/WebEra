@@ -30,6 +30,33 @@
         </div>
     </div>
 
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content" style="height:80vh">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" style="text-align: center; width: 100%; font-weight: 700;" id="exampleModalLabel">HASIL PREDIKSI</h1>
+            </div>
+            <div class="modal-body">
+              <table class="table table-striped" style="width:100%; text-align: center;">
+                <thead>
+                    <tr>
+                        <th>Jinggle Input</th>
+                        <th>Lagu Terdekat</th>
+                        <th>Prediksi</th>
+                    </tr>
+                </thead>
+                <tbody id="add_Data">
+                    
+                </tbody>
+              </table>
+            </div>
+            <div style="text-align: center; width: 100%; margin: 20px 0;">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>  
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -37,6 +64,9 @@
 </html>
 <script>
     $( document ).ready(function() {
+        const myModal = new bootstrap.Modal('#myModal', {
+            keyboard: false
+        })
         $("#formFile").change(function () {
 
             var form_data = new FormData();
@@ -59,19 +89,28 @@
                 data: form_data,
                 type: 'POST',
                 success: function(response){
-                    if(parseFloat(response)>0.5){
-                        Swal.fire({
-                            title: 'Will Became Popular',
-                            icon: 'success',
-                            confirmButtonText: 'Ok'
-                        })
-                    }else{
-                        Swal.fire({
-                            title: 'Will Not Became Popular',
-                            icon: 'error',
-                            confirmButtonText: 'Ok'
-                        })
+                    console.log(response)
+                    data = response
+                    for(i=0;i<Object.keys(data).length;i++){
+                        pred = ""
+                        if(data[i]['pred']>0.5){
+                            pred = 'Diprediksi Populer'
+                        }else{
+                            pred = 'Diprediksi Tidak Populer'
+                        }
+                        $("#add_Data").append(
+                            '<tr><td><label for="">'+data[i]['realTitle']+"</label><audio controls>"+
+                            '<source src="static/data/'+data[i]['music_input']+'" type="audio/mpeg"></audio></td><td>'+
+                            '<label for="">'+data[i]['music_near'][0]+'</label><audio controls>'+
+                            '<source src="static/'+data[i]['music_near'][0]+'" type="audio/mpeg"></audio>'+
+                            '<label for="">'+data[i]['music_near'][1]+'</label><audio controls>'+
+                            '<source src="static/'+data[i]['music_near'][1]+'" type="audio/mpeg"></audio>'+
+                            '<label for="">'+data[i]['music_near'][2]+'</label><audio controls>'+
+                            '<source src="static/'+data[i]['music_near'][2]+'" type="audio/mpeg"></audio>'+
+                            '</td><td>'+pred+'</td></tr>'
+                        );
                     }
+                    myModal.show()
                     $("#formFile").val("")
                 },
                 error: function(error){
